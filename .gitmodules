@@ -1,0 +1,9 @@
+[submodule "openwrt"]
+	path = openwrt
+	url = git@github.com:tessel/openwrt
+[submodule "packages"]
+	path = upstream-packages
+	url = https://github.com/kevinmehall/packages.git
+[submodule "upstream-packages"]
+	path = upstream-packages
+	url = https://github.com/kevinmehall/packages.git
