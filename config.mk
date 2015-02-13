@@ -32,4 +32,4 @@ PACKAGES += nano
 PACKAGES += dmesg
 
 # JavaScript
-PACKAGES += node
+PACKAGES += iojs
