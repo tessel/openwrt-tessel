@@ -1,8 +1,5 @@
 TARGET ?= v2
 
-PACKAGES += rpcd
-PACKAGES += rpcd-mod-iwinfo
-
 # USB
 PACKAGES += kmod-usb-serial
 PACKAGES += kmod-usb-serial-ch341
@@ -33,6 +30,8 @@ PACKAGES += bluez-utils
 # Utilities
 PACKAGES += nano
 PACKAGES += dmesg
+PACKAGES += rpcd
+PACKAGES += rpcd-mod-iwinfo
 
 # JavaScript
 PACKAGES += iojs
