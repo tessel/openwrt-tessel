@@ -1,5 +1,8 @@
 TARGET ?= v2
 
+PACKAGES += rpcd
+PACKAGES += rpcd-mod-iwinfo
+
 # USB
 PACKAGES += kmod-usb-serial
 PACKAGES += kmod-usb-serial-ch341
