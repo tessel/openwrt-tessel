@@ -38,6 +38,7 @@ endef
 CONFIGURE_ARGS = --dest-cpu=mipsel --dest-os=linux \
   --shared-openssl --shared-openssl-includes="$(STAGING_DIR)/usr/include" --shared-openssl-libpath="$(STAGING_DIR)/usr/lib" \
   --shared-zlib --shared-zlib-includes="$(STAGING_DIR)/usr/include" --shared-zlib-libpath="$(STAGING_DIR)/usr/lib" \
+  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5" \
   -- -Dmips_arch_variant=r2 -Dmips_fpu_mode=fp32 -Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false
 
 define Package/iojs/install
