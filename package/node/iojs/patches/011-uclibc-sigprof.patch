@@ -2,7 +2,7 @@ Revert 96ffcb9a210a2fa1248ae5931290193573512a96, which causes
 node to abort on uClibc. To be investigated further...
 --- a/src/node.cc
 +++ b/src/node.cc
-@@ -3392,10 +3392,6 @@ inline void PlatformInit() {
+@@ -3460,10 +3460,6 @@ inline void PlatformInit() {
    RegisterSignalHandler(SIGINT, SignalExit, true);
    RegisterSignalHandler(SIGTERM, SignalExit, true);
  
