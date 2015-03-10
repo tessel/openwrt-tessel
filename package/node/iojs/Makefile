@@ -35,11 +35,22 @@ define Package/npm
   URL:=https://npmjs.org/
 endef
 
-CONFIGURE_ARGS = --dest-cpu=mipsel --dest-os=linux \
+ifeq ($(ARCH),i386)
+  DEST_CPU=ia32
+else
+  DEST_CPU=$(ARCH)
+endif
+
+
+CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
   --shared-openssl --shared-openssl-includes="$(STAGING_DIR)/usr/include" --shared-openssl-libpath="$(STAGING_DIR)/usr/lib" \
   --shared-zlib --shared-zlib-includes="$(STAGING_DIR)/usr/include" --shared-zlib-libpath="$(STAGING_DIR)/usr/lib" \
-  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5" \
-  -- -Dmips_arch_variant=r2 -Dmips_fpu_mode=fp32 -Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false
+  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5"
+
+ifeq ($(ARCH),mipsel)
+  CONFIGURE_ARGS += \
+    -- -Dmips_arch_variant=r2 -Dmips_fpu_mode=fp32 -Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false
+endif
 
 define Package/iojs/install
 	mkdir -p $(1)/usr/bin
