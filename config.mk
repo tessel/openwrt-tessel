@@ -5,6 +5,7 @@ PACKAGES += kmod-usb-serial
 PACKAGES += kmod-usb-serial-ch341
 PACKAGES += kmod-usb-serial-ftdi
 PACKAGES += kmod-usb-serial-pl2303
+PACKAGES += kmod-usb-acm
 PACKAGES += libusb-1.0
 PACKAGES += usbutils
 
