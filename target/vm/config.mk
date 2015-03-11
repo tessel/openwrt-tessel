@@ -3,3 +3,5 @@ CONFIG_TARGET_x86_generic=y
 CONFIG_TARGET_x86_generic_Generic=y
 CONFIG_TARGET_ROOTFS_EXT4FS=y
 CONFIG_VDI_IMAGES=y
+
+PACKAGES += kmod-usb-ohci-pci
