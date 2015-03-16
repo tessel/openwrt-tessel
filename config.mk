@@ -36,3 +36,6 @@ PACKAGES += rpcd-mod-iwinfo
 
 # JavaScript
 PACKAGES += iojs
+
+
+CONFIG_SDK=y
