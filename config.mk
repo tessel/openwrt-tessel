@@ -36,6 +36,6 @@ PACKAGES += rpcd-mod-iwinfo
 
 # JavaScript
 PACKAGES += iojs
-
+PACKAGES += tessel-app
 
 CONFIG_SDK=y
