@@ -33,6 +33,8 @@ PACKAGES += nano
 PACKAGES += dmesg
 PACKAGES += rpcd
 PACKAGES += rpcd-mod-iwinfo
+PACKAGES += wget
+PACKAGES += ca-certificates
 
 # JavaScript
 PACKAGES += iojs
