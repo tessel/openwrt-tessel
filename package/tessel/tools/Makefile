@@ -28,8 +28,8 @@ define Package/tools/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/spid.init $(1)/etc/init.d/spid
 
-	mkdir -p $(1)/usr/lib/node_modules
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node_modules/tessel.js
+	mkdir -p $(1)/usr/lib/node
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node/tessel.js
 endef
 
 $(eval $(call BuildPackage,tools))
