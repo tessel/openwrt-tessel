@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=tools
+PKG_NAME:=tessel-tools
 PKG_VERSION:=0.1
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
@@ -12,7 +12,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/tools
+define Package/tessel-tools
 	CATEGORY:=Tessel
 	TITLE:=Tessel coprocessor bridge
 endef
@@ -21,7 +21,7 @@ define Build/Compile
 	$(call Build/Compile/Default,-C soc) 
 endef
 
-define Package/tools/install
+define Package/tessel-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/spid $(1)/usr/bin/spid
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/spid.sh $(1)/usr/bin/spid-start
@@ -32,4 +32,4 @@ define Package/tools/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node/tessel.js
 endef
 
-$(eval $(call BuildPackage,tools))
+$(eval $(call BuildPackage,tessel-tools))
