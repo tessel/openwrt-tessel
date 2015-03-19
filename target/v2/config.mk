@@ -8,5 +8,5 @@ CONFIG_PACKAGE_kmod-rt2800-pci=n
 CONFIG_PACKAGE_kmod-rt2x00-pci=n
 
 PACKAGES+=kmod-spi-dev
-PACKAGES+=spid
+PACKAGES+=tools
 PACKAGES+=uboot-mt7620-Default
