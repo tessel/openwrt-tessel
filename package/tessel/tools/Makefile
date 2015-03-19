@@ -5,7 +5,7 @@ PKG_VERSION:=0.1
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git@github.com:tessel/v2-samd21.git
+PKG_SOURCE_URL:=https://github.com/tessel/v2-samd21.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=13a9a44923b70a27058e5fc2838c3675e67e6fda
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
@@ -29,7 +29,7 @@ define Package/tools/install
 	$(INSTALL_BIN) ./files/spid.init $(1)/etc/init.d/spid
 
 	mkdir -p $(1)/usr/lib/node_modules
-	ln -s $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node_modules/tessel.js
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node_modules/tessel.js
 endef
 
 $(eval $(call BuildPackage,tools))
