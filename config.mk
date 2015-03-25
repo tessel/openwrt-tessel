@@ -40,4 +40,7 @@ PACKAGES += ca-certificates
 PACKAGES += iojs
 PACKAGES += tessel-app
 
+# MDNS
+PACKAGES += tessel-mdns
+
 CONFIG_SDK=y

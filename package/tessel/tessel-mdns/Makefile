@@ -9,6 +9,10 @@ include $(INCLUDE_DIR)/package.mk
 define Package/tessel-mdns
 	CATEGORY:=Tessel
 	TITLE:=Begin advertising Tessel over mDNS
+	DEPENDS:=+mdns-utils
+endef
+
+define Build/Compile
 endef
 
 define Package/tessel-mdns/install
