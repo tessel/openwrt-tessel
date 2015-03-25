@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+
+START=61
+USE_PROCD=1
+
+start_service() {
+  procd_open_instance
+  # Advertise a service
+  # name=hostname
+  # type=tessel/tcp
+  # domain=local
+  # port= 22
+  procd_set_param command dns-sd -R "$(uci get system.@system[0].hostname)" '_tessel._tcp' 'local' 22
+  procd_close_instance
+}
