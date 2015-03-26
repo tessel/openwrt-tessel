@@ -17,6 +17,7 @@ endef
 
 define Package/tessel-mdns/install
 	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/tessel-mdns.init $(1)/etc/init.d/tessel-mdns
 endef
 
 $(eval $(call BuildPackage,tessel-mdns))
