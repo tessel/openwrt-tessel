@@ -42,5 +42,6 @@ PACKAGES += tessel-app
 
 # MDNS
 PACKAGES += tessel-mdns
+PACKAGES += mdns-utils
 
 CONFIG_SDK=y
