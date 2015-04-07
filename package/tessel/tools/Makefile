@@ -23,10 +23,15 @@ endef
 
 define Package/tessel-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/etc/init.d
+
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/spid $(1)/usr/bin/spid
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/spid.sh $(1)/usr/bin/spid-start
-	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/spid.init $(1)/etc/init.d/spid
+
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/usbexecd $(1)/usr/bin/usbexecd
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/usbexecd.sh $(1)/usr/bin/usbexecd-start
+	$(INSTALL_BIN) ./files/usbexecd.init $(1)/etc/init.d/usbexecd
 
 	$(INSTALL_DIR) $(1)/usr/lib/node
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node/tessel.js
