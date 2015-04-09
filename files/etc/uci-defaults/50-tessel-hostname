@@ -1,0 +1,8 @@
+#!/bin/sh
+
+MACADDR=$(ifconfig eth0 | awk '/HWaddr/ { print $5 }' | tr -d :)
+
+uci batch <<EOF
+set system.@system[0].hostname=Tessel-${MACADDR}
+commit system
+EOF
