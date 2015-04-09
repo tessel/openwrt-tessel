@@ -10,18 +10,20 @@ OPENWRT_MAKE := +$(MAKE) -C $(OPENWRT_DIR)
 
 print-%: ; $(info $* = $($*))
 
-# Include CONFIG_* vars from included makefiles in OpenWRT configuration
-CFG += $(foreach V, $(filter CONFIG_%, $(.VARIABLES)),\n$V=$($V))
-
-# Enable packages in OpenWRT configuration
-CFG += $(foreach P, $(PACKAGES),\nCONFIG_PACKAGE_$(P)=y) 
-export CFG
-
 MK = config.mk target/$(TARGET)/config.mk
 
 openwrt/.config: $(MK) openwrt openwrt/feeds.conf
-	echo "$$CFG" > openwrt/.config
+	+make --no-print-directory -s print-config > openwrt/.config
 	$(OPENWRT_MAKE) defconfig
+
+print-config:
+	# Include CONFIG_* vars from included makefiles in OpenWRT configuration
+	$(foreach V, $(filter CONFIG_%, $(.VARIABLES)),$(info $V=$($V)))
+
+	# Enable packages in OpenWRT configuration
+	$(foreach P, $(PACKAGES),$(info CONFIG_PACKAGE_$(P)=y))
+
+.PHONY: print-config
 
 openwrt/feeds.conf: $(MK)
 	cp feeds.conf openwrt/feeds.conf
