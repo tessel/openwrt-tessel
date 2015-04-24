@@ -36,6 +36,18 @@ PACKAGES += rpcd-mod-iwinfo
 PACKAGES += wget
 PACKAGES += ca-certificates
 
+# Sound
+PACKAGES += kmod-usb-audio
+PACKAGES += kmod-sound-core
+PACKAGES += kmod-sound-i8x0
+PACKAGES += portaudio
+PACKAGES += alsa-lib
+PACKAGES += alsa-utils
+PACKAGES += libbz2
+PACKAGES += ffmpeg
+PACKAGES += lame
+PACKAGES += sox
+
 # JavaScript
 PACKAGES += iojs
 PACKAGES += tessel-app
