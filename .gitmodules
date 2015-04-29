@@ -3,4 +3,4 @@
 	url = https://github.com/tessel/openwrt.git
 [submodule "upstream-packages"]
 	path = upstream-packages
-	url = https://github.com/kevinmehall/packages.git
+	url = https://github.com/openwrt/packages.git
