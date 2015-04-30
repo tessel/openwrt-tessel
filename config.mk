@@ -21,7 +21,6 @@ PACKAGES += kmod-video-core
 PACKAGES += kmod-video-uvc
 PACKAGES += v4l-utils
 PACKAGES += libv4l
-PACKAGES += mjpg-streamer
 
 # Bluetooth
 PACKAGES += kmod-bluetooth
