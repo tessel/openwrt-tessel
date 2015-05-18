@@ -12,7 +12,8 @@ print-%: ; $(info $* = $($*))
 
 MK = config.mk target/$(TARGET)/config.mk
 
-openwrt/.config: $(MK) openwrt openwrt/feeds.conf
+openwrt/.config: $(MK) openwrt openwrt/feeds/tessel.index openwrt/feeds.conf
+	+cd openwrt; ./scripts/feeds install $(PACKAGES)
 	+make --no-print-directory -s print-config > openwrt/.config
 	$(OPENWRT_MAKE) defconfig
 
@@ -25,10 +26,11 @@ print-config:
 
 .PHONY: print-config
 
-openwrt/feeds.conf: $(MK)
+openwrt/feeds.conf: feeds.conf $(MK)
 	cp feeds.conf openwrt/feeds.conf
+
+openwrt/feeds/tessel.index: openwrt/feeds.conf
 	+cd openwrt; ./scripts/feeds update -a
-	+cd openwrt; ./scripts/feeds install $(PACKAGES)
 
 openwrt/files:
 	ln -s ../files openwrt/files
