@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iojs
-PKG_VERSION:=v1.4.1
+PKG_VERSION:=v2.0.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=iojs-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://iojs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=da7bbb2ec8d0980ddbfca9d6de2ba5e9d5b57b41f6ef50140da746577fc98c34
+PKG_SHA256SUM:=31cc88739c368ddc1c0d259ab8dc3f2040649f5e4e91456f6fdb3be8815e3ae3
 
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=
@@ -45,11 +45,12 @@ endif
 CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
   --shared-openssl --shared-openssl-includes="$(STAGING_DIR)/usr/include" --shared-openssl-libpath="$(STAGING_DIR)/usr/lib" \
   --shared-zlib --shared-zlib-includes="$(STAGING_DIR)/usr/include" --shared-zlib-libpath="$(STAGING_DIR)/usr/lib" \
-  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5"
+  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5" \
+  --without-snapshot
 
 ifeq ($(ARCH),mipsel)
   CONFIGURE_ARGS += \
-    -- -Dmips_arch_variant=r2 -Dmips_fpu_mode=fp32 -Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false
+   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft
 endif
 
 define Package/iojs/install
