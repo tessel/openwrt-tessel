@@ -1,0 +1,19 @@
+Index: iojs-v2.0.2/common.gypi
+===================================================================
+--- iojs-v2.0.2.orig/common.gypi	2015-05-15 23:11:16.000000000 +0000
++++ iojs-v2.0.2/common.gypi	2015-05-18 20:48:22.473183198 +0000
+@@ -218,6 +218,14 @@
+             'cflags': [ '-m64' ],
+             'ldflags': [ '-m64' ],
+           }],
++	  [ 'target_arch=="mips" or target_arch=="mipsel"', {
++            'target_conditions': [
++              ['_toolset=="host"', {
++                'cflags': ['-m32'],
++                'ldflags': [ '-m32' ],
++              }],
++            ],
++          }],
+           [ 'OS=="solaris"', {
+             'cflags': [ '-pthreads' ],
+             'ldflags': [ '-pthreads' ],
