@@ -52,6 +52,9 @@ PACKAGES += sox
 PACKAGES += iojs
 PACKAGES += tessel-app
 
+# Python
+PACKAGES += python
+
 # MDNS
 PACKAGES += tessel-mdns
 PACKAGES += mdns-utils
