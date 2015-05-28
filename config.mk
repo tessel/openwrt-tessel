@@ -16,6 +16,7 @@ PACKAGES += kmod-usb-storage-extras
 PACKAGES += kmod-fs-vfat
 PACKAGES += kmod-nls-cp437
 PACKAGES += kmod-nls-utf8
+PACKAGES += kmod-nls-iso8859-1
 
 # Video (Webcam)
 PACKAGES += kmod-video-core
