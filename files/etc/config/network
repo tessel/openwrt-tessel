@@ -1,0 +1,18 @@
+config interface 'loopback'
+    option ifname 'lo'
+    option proto 'static'
+    option ipaddr '127.0.0.1'
+    option netmask '255.0.0.0'
+
+config globals 'globals'
+    option ula_prefix 'fd87:e99f:34ad::/48'
+
+config interface 'wifi'
+    option proto 'dhcp'
+
+config interface 'ethernet'
+    option ifname 'eth0'
+    option proto 'dhcp'
+
+config switch 'mt7620'
+    option enable_vlan 0
