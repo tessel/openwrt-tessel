@@ -4,9 +4,6 @@ config interface 'loopback'
     option ipaddr '127.0.0.1'
     option netmask '255.0.0.0'
 
-config globals 'globals'
-    option ula_prefix 'fd87:e99f:34ad::/48'
-
 config interface 'wifi'
     option proto 'dhcp'
 
