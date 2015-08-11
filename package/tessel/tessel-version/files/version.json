@@ -1,0 +1,7 @@
+{
+  "version": "0.0.1",
+  "commits": {
+    "openwrt": "8ec549f3d1a76647c24324a21c430c70cabf3b19",
+    "samd21": "cfe3cdb324bc78935077bb0507c9f7a846f1e2ae"
+  }
+}
