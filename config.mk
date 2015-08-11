@@ -66,6 +66,9 @@ PACKAGES += python
 PACKAGES += tessel-mdns
 PACKAGES += mdns-utils
 
+# Updating
+PACKAGES += tessel-version
+
 CONFIG_SDK=y
 
 CONFIG_IMAGEOPT=y
