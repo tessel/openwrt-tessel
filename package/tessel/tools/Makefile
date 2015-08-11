@@ -35,6 +35,7 @@ define Package/tessel-tools/install
 
 	$(INSTALL_DIR) $(1)/usr/lib/node
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel.js $(1)/usr/lib/node/tessel.js
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/node/tessel-export.js $(1)/usr/lib/node/tessel-export.js
 endef
 
 $(eval $(call BuildPackage,tessel-tools))
