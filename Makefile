@@ -1,7 +1,6 @@
 default: world
 
 OPENWRT_DIR  	:= openwrt
-GIT_VERSION     := $(git rev-parse HEAD)
 
 include config.mk
 include target/$(TARGET)/config.mk
@@ -42,6 +41,7 @@ toolchain: openwrt/.config
 	$(OPENWRT_MAKE) toolchain
 
 world: openwrt/.config openwrt/files openwrt/feeds.conf
+	git rev-parse HEAD > openwrt/files/etc/tessel-version
 	$(OPENWRT_MAKE) world PROFILE=$(PROFILE)
 
 clean:
