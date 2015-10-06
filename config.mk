@@ -56,7 +56,7 @@ PACKAGES += lame
 PACKAGES += sox
 
 # JavaScript
-PACKAGES += iojs
+PACKAGES += node
 PACKAGES += tessel-app
 
 # Python
