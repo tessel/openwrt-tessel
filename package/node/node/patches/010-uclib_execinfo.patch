@@ -1,0 +1,36 @@
+--- a/deps/v8/src/base/logging.cc
++++ b/deps/v8/src/base/logging.cc
+@@ -4,13 +4,13 @@
+
+ #include "src/base/logging.h"
+
+-#if V8_LIBC_GLIBC || V8_OS_BSD
++#if (V8_LIBC_GLIBC && !defined(__UCLIBC__)) || V8_OS_BSD
+ #include <cxxabi.h>
+ #include <dlfcn.h>
+ #include <execinfo.h>
+ #elif V8_OS_QNX
+ #include <backtrace.h>
+-#endif  // V8_LIBC_GLIBC || V8_OS_BSD
++#endif  // (V8_LIBC_GLIBC && !defined(__UCLIBC__)) || V8_OS_BSD
+
+ #include <cstdio>
+ #include <cstdlib>
+@@ -52,7 +52,7 @@ DEFINE_CHECK_OP_IMPL(GT)
+
+ // Attempts to dump a backtrace (if supported).
+ void DumpBacktrace() {
+-#if V8_LIBC_GLIBC || V8_OS_BSD
++#if (V8_LIBC_GLIBC && !defined(__UCLIBC__)) || V8_OS_BSD
+   void* trace[100];
+   int size = backtrace(trace, arraysize(trace));
+   OS::PrintError("\n==== C stack trace ===============================\n\n");
+@@ -93,7 +93,7 @@ void DumpBacktrace() {
+   }
+   bt_unload_memmap(&memmap);
+   bt_release_accessor(&acc);
+-#endif  // V8_LIBC_GLIBC || V8_OS_BSD
++#endif  // (V8_LIBC_GLIBC && !defined(__UCLIBC__)) || V8_OS_BSD
+ }
+
+ }  // namespace base

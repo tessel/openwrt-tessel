@@ -1,33 +1,33 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=iojs
-PKG_VERSION:=v2.3.0
+PKG_NAME:=node
+PKG_VERSION:=v4.1.2
 PKG_RELEASE:=1
 
-PKG_SOURCE:=iojs-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://iojs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=556e1a2f58c993fcb7a89c55bc2a4da6fba74cd4d444777a8b64b19d57c4cc3c
+PKG_SOURCE:=node-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
+PKG_SHA256SUM:=febec3703a3fea9b64c46100a7b6a4408250027aa8259a2a815fd2275d502c49
 
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/iojs
+define Package/node
   DEPENDS:=+libpthread +librt +libstdcpp +libopenssl +zlib
-  SUBMENU:=Node.js
+  SUBMENU:=Node
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=io.js is an npm compatible platform originally based on node.js
-  URL:=https://iojs.org/
+  TITLE:=Node is a JavaScript runtime built on Chrome's V8 JavaScript engine
+  URL:=https://nodejs.org/
 endef
 
-define Package/iojs/description
-io.js is an npm compatible platform originally based on node.js
+define Package/node/description
+Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine
 endef
 
 define Package/npm
-  DEPENDS:=+iojs
+  DEPENDS:=+node
   SUBMENU:=Node.js
   SECTION:=lang
   CATEGORY:=Languages
@@ -53,10 +53,9 @@ ifeq ($(ARCH),mipsel)
    --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft
 endif
 
-define Package/iojs/install
+define Package/node/install
 	mkdir -p $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/out/Release/iojs $(1)/usr/bin/iojs
-	ln -sf /usr/bin/iojs $(1)/usr/bin/node
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/out/Release/node $(1)/usr/bin/node
 endef
 
 define Package/npm/install
@@ -65,6 +64,6 @@ define Package/npm/install
 	ln -sf /usr/lib/node_modules/npm/bin/npm-cli.js $(1)/usr/bin/npm
 endef
 
-$(eval $(call BuildPackage,iojs))
+$(eval $(call BuildPackage,node))
 $(eval $(call BuildPackage,npm))
 
