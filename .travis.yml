@@ -1,0 +1,63 @@
+sudo: false
+language: python
+
+addons:
+  apt:
+    packages:
+      - coreutils
+      - rsync
+
+cache:
+  directories:
+  - "$HOME/gcloud/"
+
+env:
+- PATH=$PATH:$HOME/gcloud/google-cloud-sdk/bin
+
+git:
+  submodules: false
+
+before_install:
+- if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then mkdir -p $HOME/gcloud && wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
+  --directory-prefix=$HOME/gcloud && cd $HOME/gcloud && tar xzf google-cloud-sdk.tar.gz
+  && printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh && cd $TRAVIS_BUILD_DIR;
+  fi
+- ssh-keygen -q -f ~/.ssh/google_compute_engine -N ""
+- gcloud auth activate-service-account --key-file <(echo "$SERVICE_ACCOUNT" | base64 --decode)
+- gcloud config set project technical-tusk
+
+install:
+- yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
+- gcloud compute instances create travis-instance --zone us-central1-b --image ubuntu-14-04 --machine-type n1-highcpu-32 --boot-disk-size 64 --scopes compute-rw
+- |
+  while [ 1 ]; do
+    gcloud compute ssh travis-instance --zone us-central1-b --command 'exit 0' -- -o ConnectTimeout=10 > /dev/null 2>&1 && break
+    sleep 1
+  done
+- gcloud compute ssh travis-instance --zone us-central1-b --command 'at now +60 minute -f <(echo "yes | gcloud compute instances delete travis-instance --zone us-central1-b")'
+
+script:
+- |
+  rsync -avz -e "$(gcloud compute ssh --zone us-central1-b travis-instance --dry-run | sed s/'[^ ]*$'//)" . "$(gcloud compute ssh --zone us-central1-b travis-instance --dry-run | awk 'END {print $NF}'):~/openwrt-tessel"
+- |
+  gcloud compute ssh travis-instance --zone us-central1-b --command '
+  set -e
+  set -x
+
+  sudo mkdir /tmp/ramdisk
+  sudo chmod 777 /tmp/ramdisk
+  sudo mount -t tmpfs -o size=14G tmpfs /tmp/ramdisk/
+  
+  sudo apt-get update -qq
+  sudo apt-get install -y software-properties-common
+  sudo apt-add-repository -y ppa:terry.guo/gcc-arm-embedded
+  sudo apt-get update -qq
+  sudo apt-get install -y build-essential git-core g++ subversion libncurses-dev libssl-dev unzip gettext gcc-arm-none-eabi
+  cp -rf ~/openwrt-tessel /tmp/ramdisk/openwrt-tessel
+  cd /tmp/ramdisk/openwrt-tessel
+  git submodule update --init --recursive
+  make -j64 || make -j64 || make -j64 || make -j64 || make -j64 V=s
+  '
+
+#after_script:
+#- yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
