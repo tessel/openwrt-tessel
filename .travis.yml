@@ -28,7 +28,7 @@ before_install:
 
 install:
 - yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
-- gcloud compute instances create travis-instance --zone us-central1-b --image ubuntu-14-04 --machine-type n1-highcpu-32 --boot-disk-size 64 --scopes compute-rw
+- gcloud compute instances create travis-instance --zone us-central1-b --image ubuntu-14-04 --machine-type n1-highcpu-32 --boot-disk-size 200 --scopes compute-rw
 - |
   while [ 1 ]; do
     gcloud compute ssh travis-instance --zone us-central1-b --command 'exit 0' -- -o ConnectTimeout=10 > /dev/null 2>&1 && break
@@ -39,6 +39,7 @@ install:
 script:
 - |
   rsync -avz -e "$(gcloud compute ssh --zone us-central1-b travis-instance --dry-run | sed s/'[^ ]*$'//)" . "$(gcloud compute ssh --zone us-central1-b travis-instance --dry-run | awk 'END {print $NF}'):~/openwrt-tessel"
+- gcloud compute ssh travis-instance --zone us-central1-b --command "echo 'export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' >> ~/.bashrc; echo 'export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' >> ~/.bashrc; "
 - |
   gcloud compute ssh travis-instance --zone us-central1-b --command '
   set -e
@@ -52,12 +53,32 @@ script:
   sudo apt-get install -y software-properties-common
   sudo apt-add-repository -y ppa:terry.guo/gcc-arm-embedded
   sudo apt-get update -qq
-  sudo apt-get install -y build-essential git-core g++ subversion libncurses-dev libssl-dev unzip gettext gcc-arm-none-eabi
-  cp -rf ~/openwrt-tessel /tmp/ramdisk/openwrt-tessel
-  cd /tmp/ramdisk/openwrt-tessel
+  sudo apt-get install -y build-essential python-pip git-core g++ subversion libncurses-dev libssl-dev unzip gettext gcc-arm-none-eabi
+
+  mkdir ~/upload
+  cd ~/openwrt-tessel
   git submodule update --init --recursive
+
+  cp -rf ~/openwrt-tessel /tmp/ramdisk/v2
+  pushd /tmp/ramdisk/v2
   make -j64 || make -j64 || make -j64 || make -j64 || make -j64 V=s
+  cp /tmp/ramdisk/v2/openwrt/bin/ramips/*sysupgrade.bin ~/upload
+  tar -czf ~/upload/toolchain-mipsel.tar.gz -C /tmp/ramdisk/v2/openwrt/staging_dir $(find /tmp/ramdisk/v2/openwrt/staging_dir -iname '*-mipsel_*' -exec basename {} \;)
+  popd
+
+  rm -rf /tmp/ramdisk/v2
+
+  cp -rf ~/openwrt-tessel /tmp/ramdisk/vm
+  pushd /tmp/ramdisk/vm
+  make -j64 TARGET=vm || make -j64 TARGET=vm || make -j64 TARGET=vm || make -j64 TARGET=vm || make -j64 TARGET=vm V=s
+  cp /tmp/ramdisk/vm/openwrt/bin/x86/*.vdi ~/upload
+  tar -czf ~/upload/toolchain-x86.tar.gz -C /tmp/ramdisk/vm/openwrt/staging_dir $(find /tmp/ramdisk/vm/openwrt/staging_dir -iname '*-i386_*' -exec basename {} \;)
+  popd
+
+  source ~/.bashrc
+  sudo -H python -m pip install awscli
+  aws s3 sync ~/upload/. s3://tessel-builds/firmware/
   '
 
-#after_script:
-#- yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
+after_script:
+- yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
