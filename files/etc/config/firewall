@@ -8,6 +8,7 @@ config zone
     option name     lan
     list   network      'ethernet'
     list   network      'wifi'
+    list   network      'lan'
     option input        ACCEPT
     option output       ACCEPT
     option forward      ACCEPT

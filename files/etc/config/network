@@ -11,5 +11,11 @@ config interface 'ethernet'
     option ifname 'eth0'
     option proto 'dhcp'
 
+config interface 'lan'
+    option ifname 'wlan0'
+    option proto 'static'
+    option ipaddr '192.168.1.101'
+    option netmask '255.255.255.0'
+
 config switch 'mt7620'
     option enable_vlan 0
