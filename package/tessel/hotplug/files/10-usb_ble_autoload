@@ -1,0 +1,11 @@
+#!/bin/sh
+BT_PRODID="a12/1/"
+BT_PRODID_HOT=`echo $PRODUCT | cut -c 1-6`
+
+if [ "$BT_PRODID_HOT" = "$BT_PRODID" ]; then
+    if [ "$ACTION" = "add" ]; then
+        logger -t HOTPLUG "bluetooth device has been plugged in!"
+        hciconfig hci0 up
+        logger -t HOTPLUG "Booting it up..."
+    fi
+fi

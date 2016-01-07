@@ -66,6 +66,9 @@ PACKAGES += python
 PACKAGES += tessel-mdns
 PACKAGES += mdns-utils
 
+# Hotplug
+PACKAGES += tessel-hotplug
+
 CONFIG_SDK=y
 
 CONFIG_IMAGEOPT=y
