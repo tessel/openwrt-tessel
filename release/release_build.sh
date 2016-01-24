@@ -46,7 +46,7 @@ ssh $USER@$SERVER << EOF
   # Enter the cloned OpenWRT directory
   cd openwrt-tessel;
   # Build the firmware
-  # make -j50;
+  make -j50;
 EOF
 
 # Check exit code for error
