@@ -17,9 +17,12 @@ endef
 
 define Package/tessel-hotplug/install
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/usb
-	$(INSTALL_BIN) ./files/10-usb_ble_autoload $(1)/etc/hotplug.d/usb/10-usb_ble_autoload
 	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/init.d/
+
+	$(INSTALL_BIN) ./files/10-usb_ble_autoload $(1)/etc/hotplug.d/usb/10-usb_ble_autoload
 	$(INSTALL_BIN) ./files/fstab $(1)/etc/config/fstab
+	$(INSTALL_BIN) ./files/ble-boot-start $(1)/etc/init.d/ble-boot-start
 endef
 
 $(eval $(call BuildPackage,tessel-hotplug))

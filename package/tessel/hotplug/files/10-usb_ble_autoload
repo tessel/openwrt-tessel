@@ -4,8 +4,9 @@ BT_PRODID_HOT=`echo $PRODUCT | cut -c 1-6`
 
 if [ "$BT_PRODID_HOT" = "$BT_PRODID" ]; then
     if [ "$ACTION" = "add" ]; then
-        logger -t HOTPLUG "bluetooth device has been plugged in!"
+        logger -t HOTPLUG "Detected hotplugged BLE device. Initializing both interfaces..."
         hciconfig hci0 up
-        logger -t HOTPLUG "Booting it up..."
+        hciconfig hci1 up
+        logger -t HOTPLUG "Done initializing."
     fi
 fi
