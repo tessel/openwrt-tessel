@@ -1,0 +1,17 @@
+config 'global'
+        # mount swap devices that don't have their own config section
+        option  anon_swap       '0'
+        # mount block devices that don't have their own config section
+        option  anon_mount      '1'
+        # automatically mount swap devices when they appear
+        option  auto_swap       '1'
+        # automatically mount block devices when they appear
+        option  auto_mount      '1'
+        # wait X seconds before trying to mount root devices on boot
+        option  delay_root      '0'
+        # run e2fsck on device prior to a mount
+        option  check_fs        '0'
+
+
+config 'global' 'automount'
+        option 'anon_mount' '1'

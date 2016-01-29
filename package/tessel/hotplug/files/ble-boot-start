@@ -1,0 +1,11 @@
+#!/bin/sh /etc/rc.common
+
+START=65
+STOP=65
+
+boot() {
+        logger -t BLE "Initializing any BLE devices plugged in at boot..."
+        hciconfig hci0 up
+        hciconfig hci1 up
+        logger -t BLE "Done initializing."
+}
