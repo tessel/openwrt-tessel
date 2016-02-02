@@ -26,6 +26,7 @@ PACKAGES += kmod-video-core
 PACKAGES += kmod-video-uvc
 PACKAGES += v4l-utils
 PACKAGES += libv4l
+PACKAGES += libjpeg
 
 # Bluetooth
 PACKAGES += kmod-bluetooth
