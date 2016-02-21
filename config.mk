@@ -27,6 +27,7 @@ PACKAGES += kmod-video-uvc
 PACKAGES += v4l-utils
 PACKAGES += libv4l
 PACKAGES += libjpeg
+PACKAGES += fswebcam
 
 # Bluetooth
 PACKAGES += kmod-bluetooth
