@@ -49,13 +49,11 @@ PACKAGES += ca-certificates
 PACKAGES += kmod-usb-audio
 PACKAGES += kmod-sound-core
 PACKAGES += kmod-sound-i8x0
-PACKAGES += portaudio
 PACKAGES += alsa-lib
 PACKAGES += alsa-utils
 PACKAGES += libbz2
 PACKAGES += ffmpeg
-PACKAGES += lame
-PACKAGES += sox
+PACKAGES += madplay
 
 # JavaScript
 PACKAGES += node
