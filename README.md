@@ -16,6 +16,17 @@ make -j50
 The resulting sysupgrade image is
 `openwrt/bin/ramips/openwrt-ramips-mt7620-tessel-squashfs-sysupgrade.bin`.
 
+### Dependencies
+If you get an error like this (Ubuntu):
+
+```
+Build dependency: Please install ncurses. (Missing libncurses.so or ncurses.h)
+```
+you are required to install some source dependencies:
+```
+sudo apt-get install zlib1g-dev libncurses5-dev
+```
+
 ### Related OpenWrt documentation
 
 * [Creating packages](http://wiki.openwrt.org/doc/devel/packages)
