@@ -16,6 +16,13 @@ make -j50
 The resulting sysupgrade image is
 `openwrt/bin/ramips/openwrt-ramips-mt7620-tessel-squashfs-sysupgrade.bin`.
 
+### Setup Ubuntu
+
+In general we suggest to prepare a build-server with the following command:
+```
+sudo apt-get install make gcc g++ subversion unzip libncurses5-dev libncursesw5-dev ncurses-doc zlib1g-dev libssl-dev gettext --yes
+```
+
 ### Related OpenWrt documentation
 
 * [Creating packages](http://wiki.openwrt.org/doc/devel/packages)
