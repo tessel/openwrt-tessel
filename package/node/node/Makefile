@@ -1,12 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
-PKG_VERSION:=v4.5.0
+PKG_VERSION:=v6.5.0
+# TODO : remove patch 010-node_6_5_0_uclib_execinfo.patch after 6.5.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=node-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=74ced83b8d890d90e2a8b0d54b0d0e9b5e01d6fd6148cec6e9911ff6eaf0cf21
+PKG_SHA256SUM:=d7742558bb3331e41510d6e6f1f7b13c0527aecc00a63c3e05fcfd44427ff778
 
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=
@@ -50,7 +51,7 @@ CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
 
 ifeq ($(ARCH),mipsel)
   CONFIGURE_ARGS += \
-   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft
+   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft --without-intl
 endif
 
 define Package/node/install
