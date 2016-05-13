@@ -1,8 +1,13 @@
 #!/bin/sh
 
-MACADDR=$(ifconfig eth0 | awk '/HWaddr/ { print $5 }' | tr -d :)
+CUSTOM_HOSTNAME=$(uci get system.@system[0].custom_hostname_set)
 
-uci batch <<EOF
+if [ -z $CUSTOM_HOSTNAME ]
+then
+  MACADDR=$(ifconfig eth0 | awk '/HWaddr/ { print $5 }' | tr -d :)
+  uci batch <<EOF
 set system.@system[0].hostname=Tessel-${MACADDR}
+set system.@system[0].custom_hostname_set=1
 commit system
 EOF
+fi
