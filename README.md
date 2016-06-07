@@ -20,7 +20,7 @@ The resulting sysupgrade image is
 
 In general we suggest to prepare a build-server with the following command:
 ```
-sudo apt-get install make gcc g++ subversion unzip libncurses5-dev libncursesw5-dev ncurses-doc zlib1g-dev libssl-dev gettext --yes
+sudo apt-get install make gcc g++ subversion unzip libncurses5-dev libncursesw5-dev ncurses-doc zlib1g-dev libssl-dev gettext gawk --yes
 ```
 
 ### Related OpenWrt documentation
