@@ -50,7 +50,7 @@ CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
 
 ifeq ($(ARCH),mipsel)
   CONFIGURE_ARGS += \
-   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft
+   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft --without-intl
 endif
 
 define Package/node/install
