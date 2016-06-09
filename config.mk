@@ -56,6 +56,7 @@ PACKAGES += ffmpeg
 PACKAGES += madplay
 
 # JavaScript
+PACKAGES += libicu
 PACKAGES += node
 PACKAGES += tessel-app
 
