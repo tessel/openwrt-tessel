@@ -52,7 +52,7 @@ PACKAGES += kmod-sound-i8x0
 PACKAGES += alsa-lib
 PACKAGES += alsa-utils
 PACKAGES += libbz2
-PACKAGES += ffmpeg
+PACKAGES += mjpg-streamer
 PACKAGES += madplay
 
 # JavaScript
