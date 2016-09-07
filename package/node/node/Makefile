@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
-PKG_VERSION:=v4.4.3
+PKG_VERSION:=v6.1.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=node-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=8e67b95721aab7bd721179da2fe5dd97f9acc1306c15c9712ee103bcd6381638
+PKG_SHA256SUM:=9e67ef0b8611e16e6e311eccf0489a50fe76ceebeea3023ef4f51be647ae4bc3
 
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=
@@ -66,4 +66,3 @@ endef
 
 $(eval $(call BuildPackage,node))
 $(eval $(call BuildPackage,npm))
-
