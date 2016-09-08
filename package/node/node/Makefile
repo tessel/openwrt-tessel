@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
-PKG_VERSION:=v4.4.3
+PKG_VERSION:=v6.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=node-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=8e67b95721aab7bd721179da2fe5dd97f9acc1306c15c9712ee103bcd6381638
+PKG_SHA256SUM:=fa26d4380150fbb69a48bddaec6143e176effe043cfe44e512c5ef9d22618b63
 
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=
@@ -50,7 +50,7 @@ CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
 
 ifeq ($(ARCH),mipsel)
   CONFIGURE_ARGS += \
-   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft
+   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft --without-intl
 endif
 
 define Package/node/install
@@ -66,4 +66,3 @@ endef
 
 $(eval $(call BuildPackage,node))
 $(eval $(call BuildPackage,npm))
-

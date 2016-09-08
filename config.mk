@@ -56,6 +56,7 @@ PACKAGES += mjpg-streamer
 PACKAGES += madplay
 
 # JavaScript
+PACKAGES += libicu
 PACKAGES += node
 PACKAGES += tessel-app
 
