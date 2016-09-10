@@ -79,22 +79,22 @@ define Build/Configure
 	)
 endef
 
-#define Build/InstallDev
-#	$(INSTALL_DIR) $(1)/usr/lib
-#	$(CP) \
-#		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
-#		$(1)/usr/lib/
-#
-#	$(INSTALL_DIR) $(1)/usr/bin
-#	$(INSTALL_DATA) \
-#		$(PKG_INSTALL_DIR)/usr/bin/* \
-#		$(1)/usr/bin/
-#
-#	$(INSTALL_DIR) $(1)/usr/include
-#	$(CP) \
-#		$(PKG_INSTALL_DIR)/usr/include/* \
-#		$(1)/usr/include/
-#endef
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
+		$(1)/usr/lib/
+
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)/usr/bin/* \
+		$(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/include/* \
+		$(1)/usr/include/
+endef
 
 define Package/libicu/install
 	$(INSTALL_DIR) $(1)/usr/lib
