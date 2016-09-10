@@ -7,6 +7,14 @@ a lightly-modified OpenWrt tree to build a Tessel-customized OpenWrt, replacing 
 Building the toolchain and all system packages requires a fast Linux system and several GB of disk
 space.
 
+**host env way**
+```
+# if 32bit host
+export CXX_host="g++" && export CC_host="gcc" && export LINK_host="g++"
+# if 64bit host
+export CXX_host="g++ -m32" && export CC_host="gcc -m32" && export LINK_host="g++ -m32"
+```
+
 ```
 git clone --recursive https://github.com/tessel/openwrt-tessel.git
 cd openwrt-tessel

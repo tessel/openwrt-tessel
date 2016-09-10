@@ -12,10 +12,19 @@ PKG_SHA256SUM:=d7742558bb3331e41510d6e6f1f7b13c0527aecc00a63c3e05fcfd44427ff778
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=
 
+# libicu way
+# PKG_BUILD_DEPENDS:=+libicu
+
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
+
+# libicu way
+# TARGET_CFLAGS += -I$(STAGING_DIR)/include
 
 define Package/node
   DEPENDS:=+libpthread +librt +libstdcpp +libopenssl +zlib
+# libicu way
+#  DEPENDS:=+libpthread +librt +libstdcpp +libopenssl +zlib +libicu
   SUBMENU:=Node
   SECTION:=lang
   CATEGORY:=Languages
@@ -52,7 +61,21 @@ CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
 ifeq ($(ARCH),mipsel)
   CONFIGURE_ARGS += \
    --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft --without-intl
+# libicu way
+#   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft --with-intl=system-icu
 endif
+
+# host env way
+# MY_HOST_CONF_ARGS =
+# ifeq ($(HOST_ARCH),x86_64)
+# 	MY_HOST_CONF_ARGS = CXX_host="g++ -m32" CC_host="gcc -m32" LINK_host="g++ -m32"
+# else
+# 	MY_HOST_CONF_ARGS = CXX_host="g++" CC_host="gcc" LINK_host="g++"
+# endif
+#
+# define Build/Compile
+# 	$(call Build/Compile/Default, $(MY_HOST_CONF_ARGS))
+# endef
 
 define Package/node/install
 	mkdir -p $(1)/usr/bin
@@ -65,6 +88,7 @@ define Package/npm/install
 	ln -sf /usr/lib/node_modules/npm/bin/npm-cli.js $(1)/usr/bin/npm
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,node))
 $(eval $(call BuildPackage,npm))
 
