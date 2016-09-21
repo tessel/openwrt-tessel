@@ -11,6 +11,7 @@ PACKAGES += kmod-usb-acm
 PACKAGES += kmod-usb-hid
 PACKAGES += libusb-1.0
 PACKAGES += usbutils
+PACKAGES += udev
 
 # Storage
 PACKAGES += kmod-usb-storage
