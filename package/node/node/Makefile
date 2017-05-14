@@ -1,69 +1,115 @@
+#
+# Copyright (C) 2006-2016 OpenWrt.org
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
-PKG_VERSION:=v4.5.0
+PKG_VERSION:=v6.10.3
 PKG_RELEASE:=1
 
-PKG_SOURCE:=node-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=74ced83b8d890d90e2a8b0d54b0d0e9b5e01d6fd6148cec6e9911ff6eaf0cf21
+PKG_SOURCE:=node-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=http://nodejs.org/dist/${PKG_VERSION}
+PKG_MD5SUM:=e82ede32b31a6c5f98659eb1f7b8d8a6
 
+HOST_BUILD_DEPENDS:=python/host
+PKG_BUILD_DEPENDS:=python/host
+PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
+
+HOST_BUILD_PARALLEL:=1
 PKG_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=
 
+PKG_MAINTAINER:=John Crispin <blogic@openwrt.org>
+PKG_LICENSE:=
+
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/node
-  DEPENDS:=+libpthread +librt +libstdcpp +libopenssl +zlib
-  SUBMENU:=Node
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=Node is a JavaScript runtime built on Chrome's V8 JavaScript engine
-  URL:=https://nodejs.org/
+  SUBMENU:=Node.js
+  TITLE:=Node.js is a platform built on Chrome's JavaScript runtime
+  URL:=http://nodejs.org/
+  DEPENDS:=+libpthread +librt +libstdcpp +libopenssl +zlib
 endef
 
 define Package/node/description
-Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine
+  Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine. Node.js uses
+  an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js'
+   package ecosystem, npm, is the largest ecosystem of open source libraries in the world.
 endef
 
-define Package/npm
-  DEPENDS:=+node
-  SUBMENU:=Node.js
+define Package/node-npm
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=Node/io.js Package Manager
-  URL:=https://npmjs.org/
+  SUBMENU:=Node.js
+  TITLE:=NPM stands for Node Package Manager
+  URL:=http://npmjs.com/
+  DEPENDS:=+node
 endef
 
-ifeq ($(ARCH),i386)
-  DEST_CPU=ia32
-else
-  DEST_CPU=$(ARCH)
+define Package/node-npm/description
+	NPM is the package manager for NodeJS
+endef
+
+CPU:=$(subst aarch64,arm64,$(subst x86_64,x64,$(subst i386,ia32,$(ARCH))))
+
+MAKE_VARS += \
+	DESTCPU=$(CPU)
+
+CONFIGURE_ARGS= \
+	--dest-cpu=$(CPU) \
+	--dest-os=linux \
+	--without-snapshot \
+	--shared-zlib \
+	--shared-openssl \
+	--prefix=/usr \
+	--with-intl=none
+
+ifneq ($(findstring arm,$(ARCH)),)
+CONFIGURE_ARGS+= \
+	$(if $(CONFIG_SOFT_FLOAT),--with-arm-float-abi=soft,--with-arm-float-abi=hard)
 endif
 
-
-CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
-  --shared-openssl --shared-openssl-includes="$(STAGING_DIR)/usr/include" --shared-openssl-libpath="$(STAGING_DIR)/usr/lib" \
-  --shared-zlib --shared-zlib-includes="$(STAGING_DIR)/usr/include" --shared-zlib-libpath="$(STAGING_DIR)/usr/lib" \
-  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5" \
-  --without-snapshot
-
-ifeq ($(ARCH),mipsel)
-  CONFIGURE_ARGS += \
-   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft
+ifneq ($(findstring mips,$(ARCH)),)
+CONFIGURE_ARGS+= \
+	$(if $(CONFIG_SOFT_FLOAT),--with-mips-float-abi=soft,--with-mips-float-abi=hard)
 endif
+
+HOST_CONFIGURE_VARS:=
+
+HOST_CONFIGURE_ARGS:= \
+	--dest-os=linux \
+	--without-snapshot \
+	--with-intl=none \
+	--prefix=$(STAGING_DIR_HOSTPKG)
+
+HOST_CONFIGURE_CMD:=python ./configure
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
+endef
 
 define Package/node/install
 	mkdir -p $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/out/Release/node $(1)/usr/bin/node
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/node $(1)/usr/bin/
 endef
 
-define Package/npm/install
-	mkdir -p $(1)/usr/lib/node_modules
-	$(CP) $(PKG_BUILD_DIR)/deps/npm $(1)/usr/lib/node_modules
-	ln -sf /usr/lib/node_modules/npm/bin/npm-cli.js $(1)/usr/bin/npm
+define Package/node-npm/install
+	mkdir -p $(1)/usr/bin $(1)/usr/lib/node_modules/npm/{bin,lib,node_modules}
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/npm $(1)/usr/bin/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/node_modules/npm/{package.json,LICENSE,cli.js} $(1)/usr/lib/node_modules/npm
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/node_modules/npm/bin/npm-cli.js $(1)/usr/lib/node_modules/npm/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/node_modules/npm/lib/* $(1)/usr/lib/node_modules/npm/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/node_modules/npm/node_modules/* $(1)/usr/lib/node_modules/npm/node_modules/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,node))
-$(eval $(call BuildPackage,npm))
-
+$(eval $(call BuildPackage,node-npm))

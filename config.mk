@@ -74,6 +74,7 @@ CONFIG_SDK=y
 
 CONFIG_IMAGEOPT=y
 CONFIG_VERSIONOPT=y
-CONFIG_VERSION_REPO="http://downloads.openwrt.org/chaos_calmer/15.05-rc2/%S/packages"
+CONFIG_VERSION_REPO="http://downloads.lede-project.org/releases/17.01.1"
 CONFIG_VERSION_MANUFACTURER="Tessel"
 CONFIG_VERSION_FILENAMES=n
+CONFIG_VERSION_CODE_FILENAMES=n
