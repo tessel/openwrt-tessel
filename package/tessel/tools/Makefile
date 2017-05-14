@@ -7,7 +7,7 @@ PKG_RELEASE=$(PKG_SOURCE_VERSION)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tessel/t2-firmware.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=fe9165c7137a8c0fe5809c282e39f8f267ec92e1
+PKG_SOURCE_VERSION:=8037907f24d3e0c3f93f46f70fe384395ce4ee7f
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 include $(INCLUDE_DIR)/package.mk
@@ -26,11 +26,9 @@ define Package/tessel-tools/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/spid $(1)/usr/bin/spid
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/spid.sh $(1)/usr/bin/spid-start
 	$(INSTALL_BIN) ./files/spid.init $(1)/etc/init.d/spid
 
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/usbexecd $(1)/usr/bin/usbexecd
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/soc/usbexecd.sh $(1)/usr/bin/usbexecd-start
 	$(INSTALL_BIN) ./files/usbexecd.init $(1)/etc/init.d/usbexecd
 
 	$(INSTALL_DIR) $(1)/usr/lib/node

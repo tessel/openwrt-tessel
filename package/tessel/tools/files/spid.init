@@ -3,8 +3,11 @@
 START=60
 USE_PROCD=1
 start_service() {
+	mkdir -p /var/run/tessel
+	ln -sf /var/run/tessel/1 /var/run/tessel/port_a
+	ln -sf /var/run/tessel/2 /var/run/tessel/port_b
 	procd_open_instance
-	procd_set_param command sh /usr/bin/spid-start
+	procd_set_param command spid /dev/spidev1.0 2 1 /var/run/tessel
 	procd_set_param respawn
 	procd_close_instance
 }
