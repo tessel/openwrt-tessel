@@ -1,15 +1,24 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
-PKG_VERSION:=v6.5.0
+PKG_VERSION:=v6.10.3
 PKG_RELEASE:=1
 
-PKG_SOURCE:=node-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=node-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=d7742558bb3331e41510d6e6f1f7b13c0527aecc00a63c3e05fcfd44427ff778
+PKG_SHA256SUM:=82262a703e61164e09170a14d88b1726720651b0c7ee87a277654247b21b5388
+
+# From : https://github.com/tessel/openwrt-tessel/blob/bc3316cd4458a5359166daf5684e9906a9ef7851/package/node/node/Makefile
+# {
+HOST_BUILD_DEPENDS:=python/host
+PKG_BUILD_DEPENDS:=python/host
+PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
+
+HOST_BUILD_PARALLEL:=1
+# }
 
 PKG_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -35,6 +44,14 @@ define Package/npm
   URL:=https://npmjs.org/
 endef
 
+# From : https://github.com/tessel/openwrt-tessel/blob/bc3316cd4458a5359166daf5684e9906a9ef7851/package/node/node/Makefile
+# {
+CPU:=$(subst aarch64,arm64,$(subst x86_64,x64,$(subst i386,ia32,$(ARCH))))
+
+MAKE_VARS += \
+	DESTCPU=$(CPU)
+# }
+
 ifeq ($(ARCH),i386)
   DEST_CPU=ia32
 else
@@ -42,16 +59,42 @@ else
 endif
 
 
-CONFIGURE_ARGS = --dest-cpu=$(DEST_CPU) --dest-os=linux \
-  --shared-openssl --shared-openssl-includes="$(STAGING_DIR)/usr/include" --shared-openssl-libpath="$(STAGING_DIR)/usr/lib" \
-  --shared-zlib --shared-zlib-includes="$(STAGING_DIR)/usr/include" --shared-zlib-libpath="$(STAGING_DIR)/usr/lib" \
-  --v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5" \
-  --without-snapshot
+CONFIGURE_ARGS = \
+	--dest-cpu=$(DEST_CPU) \
+	--dest-os=linux \
+  --without-snapshot \
+	--shared-zlib \
+	--shared-openssl \
+	--prefix=/usr \
+	--v8-options="--max_old_space_size=20 --initial_old_space_size=4 --max_semi_space_size=2 --max_executable_size=5 --optimize_for_size" \
+	--without-inspector \
+	--without-dtrace \
+	--without-intl
 
 ifeq ($(ARCH),mipsel)
   CONFIGURE_ARGS += \
-   --with-mips-arch-variant=r2 --with-mips-fpu-mode=fp32 --with-mips-float-abi=soft --without-intl
+   --with-mips-arch-variant=r2 \
+	 --with-mips-fpu-mode=fp32 \
+	 --with-mips-float-abi=soft
 endif
+
+# From : https://github.com/tessel/openwrt-tessel/blob/bc3316cd4458a5359166daf5684e9906a9ef7851/package/node/node/Makefile
+# {
+HOST_CONFIGURE_VARS:=
+
+HOST_CONFIGURE_ARGS:= \
+	--dest-os=linux \
+	--without-snapshot \
+	--with-intl=none \
+	--prefix=$(STAGING_DIR_HOSTPKG)
+
+HOST_CONFIGURE_CMD:=python ./configure
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
+endef
+# }
 
 define Package/node/install
 	mkdir -p $(1)/usr/bin
@@ -66,4 +109,3 @@ endef
 
 $(eval $(call BuildPackage,node))
 $(eval $(call BuildPackage,npm))
-
