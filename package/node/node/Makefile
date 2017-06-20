@@ -62,7 +62,7 @@ endif
 CONFIGURE_ARGS = \
 	--dest-cpu=$(DEST_CPU) \
 	--dest-os=linux \
-  --without-snapshot \
+	--without-snapshot \
 	--shared-zlib \
 	--shared-openssl \
 	--prefix=/usr \
@@ -72,8 +72,8 @@ CONFIGURE_ARGS = \
 	--without-intl
 
 ifeq ($(ARCH),mipsel)
-  CONFIGURE_ARGS += \
-   --with-mips-arch-variant=r2 \
+	CONFIGURE_ARGS += \
+	 --with-mips-arch-variant=r2 \
 	 --with-mips-fpu-mode=fp32 \
 	 --with-mips-float-abi=soft
 endif
