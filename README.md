@@ -1,3 +1,7 @@
+# OpenWrt
+
+[![Code of Conduct](https://img.shields.io/badge/%E2%9D%A4-code%20of%20conduct-blue.svg?style=flat)](https://github.com/tessel/project/blob/master/CONDUCT.md)
+
 This repository contains build scripts and packages for the OpenWrt system on Tessel 2. It overlays
 a lightly-modified OpenWrt tree to build a Tessel-customized OpenWrt, replacing the use of
 `menuconfig` with a version-controlled configuration from this repository.
@@ -7,7 +11,7 @@ a lightly-modified OpenWrt tree to build a Tessel-customized OpenWrt, replacing 
 Building the toolchain and all system packages requires a fast Linux system and several GB of disk
 space.
 
-```
+```shell-script
 git clone --recursive https://github.com/tessel/openwrt-tessel.git
 cd openwrt-tessel
 make -j50
@@ -19,7 +23,7 @@ The resulting sysupgrade image is
 ### Setup Ubuntu
 
 In general we suggest to prepare a build-server with the following command:
-```
+```shell-script
 sudo apt-get install make gcc g++ subversion unzip libncurses5-dev libncursesw5-dev ncurses-doc zlib1g-dev libssl-dev gettext gawk --yes
 ```
 
