@@ -7,7 +7,7 @@ a lightly-modified OpenWrt tree to build a Tessel-customized OpenWrt, replacing 
 Building the toolchain and all system packages requires a fast Linux system and several GB of disk
 space.
 
-```shell
+```git
 git clone --recursive https://github.com/tessel/openwrt-tessel.git
 cd openwrt-tessel
 make -j50
@@ -19,7 +19,7 @@ The resulting sysupgrade image is
 ### Setup Ubuntu
 
 In general we suggest to prepare a build-server with the following command:
-```bash
+```shell
 sudo apt-get install make gcc g++ subversion unzip libncurses5-dev libncursesw5-dev ncurses-doc zlib1g-dev libssl-dev gettext gawk --yes
 ```
 
