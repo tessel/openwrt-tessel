@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
-PKG_VERSION:=v6.10.3
+PKG_VERSION:=v6.11.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=node-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://nodejs.org/dist/${PKG_VERSION}/
-PKG_SHA256SUM:=82262a703e61164e09170a14d88b1726720651b0c7ee87a277654247b21b5388
+PKG_SHA256SUM:=6f6655b85919aa54cb045a6d69a226849802fcc26491d0db4ce59873e41cc2b8
 
 # From : https://github.com/tessel/openwrt-tessel/blob/bc3316cd4458a5359166daf5684e9906a9ef7851/package/node/node/Makefile
 # {
