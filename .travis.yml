@@ -27,37 +27,108 @@ before_install:
 - gcloud config set project technical-tusk
 
 install:
-- yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
-- gcloud compute instances create travis-instance --zone us-central1-b --image ubuntu-14-04 --machine-type n1-highcpu-32 --boot-disk-size 64 --scopes compute-rw
+- yes | gcloud compute instances delete travis-vm --zone us-central1-b || true
+- yes | gcloud compute instances delete travis-v2 --zone us-central1-b || true
+- gcloud compute instances create travis-vm --zone us-central1-b --image ubuntu-14-04 --machine-type n1-highcpu-16 --boot-disk-size 200 --scopes compute-rw
+- gcloud compute instances create travis-v2 --zone us-central1-b --image ubuntu-14-04 --machine-type n1-highcpu-16 --boot-disk-size 200 --scopes compute-rw
 - |
   while [ 1 ]; do
-    gcloud compute ssh travis-instance --zone us-central1-b --command 'exit 0' -- -o ConnectTimeout=10 > /dev/null 2>&1 && break
+    gcloud compute ssh travis-vm --zone us-central1-b --command 'exit 0' -- -o ConnectTimeout=10 > /dev/null 2>&1 && \
+    gcloud compute ssh travis-v2 --zone us-central1-b --command 'exit 0' -- -o ConnectTimeout=10 > /dev/null 2>&1 && \
+    break
     sleep 1
   done
-- gcloud compute ssh travis-instance --zone us-central1-b --command 'at now +60 minute -f <(echo "yes | gcloud compute instances delete travis-instance --zone us-central1-b")'
+- gcloud compute ssh travis-vm --zone us-central1-b --command 'at now +60 minute -f <(echo "yes | gcloud compute instances delete travis-vm --zone us-central1-b")'
+- gcloud compute ssh travis-v2 --zone us-central1-b --command 'at now +60 minute -f <(echo "yes | gcloud compute instances delete travis-v2 --zone us-central1-b")'
 
 script:
 - |
-  rsync -avz -e "$(gcloud compute ssh --zone us-central1-b travis-instance --dry-run | sed s/'[^ ]*$'//)" . "$(gcloud compute ssh --zone us-central1-b travis-instance --dry-run | awk 'END {print $NF}'):~/openwrt-tessel"
+  rsync -avz -e "$(gcloud compute ssh --zone us-central1-b travis-vm --dry-run | sed s/'[^ ]*$'//)" . "$(gcloud compute ssh --zone us-central1-b travis-vm --dry-run | awk 'END {print $NF}'):~/openwrt-tessel"
 - |
-  gcloud compute ssh travis-instance --zone us-central1-b --command '
-  set -e
+  rsync -avz -e "$(gcloud compute ssh --zone us-central1-b travis-v2 --dry-run | sed s/'[^ ]*$'//)" . "$(gcloud compute ssh --zone us-central1-b travis-v2 --dry-run | awk 'END {print $NF}'):~/openwrt-tessel"
+- gcloud compute ssh travis-vm --zone us-central1-b --command "mkdir -p ~/.aws; echo '$AWS_CREDENTIALS' | base64 --decode > ~/.aws/credentials"
+- gcloud compute ssh travis-v2 --zone us-central1-b --command "mkdir -p ~/.aws; echo '$AWS_CREDENTIALS' | base64 --decode > ~/.aws/credentials"
+- |
+  gcloud compute ssh travis-vm --zone us-central1-b --command '
   set -x
 
   sudo mkdir /tmp/ramdisk
   sudo chmod 777 /tmp/ramdisk
-  sudo mount -t tmpfs -o size=14G tmpfs /tmp/ramdisk/
+  sudo mount -t tmpfs -o size=12G tmpfs /tmp/ramdisk/
   
   sudo apt-get update -qq
   sudo apt-get install -y software-properties-common
   sudo apt-add-repository -y ppa:terry.guo/gcc-arm-embedded
   sudo apt-get update -qq
-  sudo apt-get install -y build-essential git-core g++ subversion libncurses-dev libssl-dev unzip gettext gcc-arm-none-eabi
-  cp -rf ~/openwrt-tessel /tmp/ramdisk/openwrt-tessel
-  cd /tmp/ramdisk/openwrt-tessel
-  git submodule update --init --recursive
-  make -j64 || make -j64 || make -j64 || make -j64 || make -j64 V=s
-  '
+  sudo apt-get install -y build-essential python-pip git-core g++ subversion libncurses-dev libssl-dev unzip gettext gcc-arm-none-eabi
+  sudo -H python -m pip install awscli
 
-#after_script:
-#- yes | gcloud compute instances delete travis-instance --zone us-central1-b || true
+  mkdir ~/upload
+  cd ~/openwrt-tessel
+  git submodule update --init --recursive
+
+  cp -rf ~/openwrt-tessel /tmp/ramdisk/build
+  pushd /tmp/ramdisk/build
+  echo "Running mipsel build..."
+  make -j32 TARGET=v2 >> ~/upload/build-mipsel.log 2>&1 || \
+  make -j32 TARGET=v2 >> ~/upload/build-mipsel.log 2>&1 || \
+  make -j32 TARGET=v2 >> ~/upload/build-mipsel.log 2>&1 || \
+  make -j32 TARGET=v2 V=s >> ~/upload/build-mipsel.log 2>&1 || \
+  true
+  aws s3 sync ~/upload/. s3://tessel-builds/firmware/
+
+  set -e
+  cp /tmp/ramdisk/build/openwrt/bin/ramips/*sysupgrade.bin ~/upload
+  tar -czf ~/upload/toolchain-mipsel.tar.gz -C /tmp/ramdisk/build/openwrt/staging_dir $(find /tmp/ramdisk/build/openwrt/staging_dir -iname '*-mipsel_*' -exec basename {} \;)
+  popd
+
+  sudo -H python -m pip install awscli
+  aws s3 sync ~/upload/. s3://tessel-builds/firmware/
+  ' &
+  PID1=$!
+  
+  gcloud compute ssh travis-v2 --zone us-central1-b --command '
+  set -x
+
+  sudo mkdir /tmp/ramdisk
+  sudo chmod 777 /tmp/ramdisk
+  sudo mount -t tmpfs -o size=12G tmpfs /tmp/ramdisk/
+  
+  sudo apt-get update -qq
+  sudo apt-get install -y software-properties-common
+  sudo apt-add-repository -y ppa:terry.guo/gcc-arm-embedded
+  sudo apt-get update -qq
+  sudo apt-get install -y build-essential python-pip git-core g++ subversion libncurses-dev libssl-dev unzip gettext gcc-arm-none-eabi
+  sudo -H python -m pip install awscli
+
+  mkdir ~/upload
+  cd ~/openwrt-tessel
+  git submodule update --init --recursive
+
+  cp -rf ~/openwrt-tessel /tmp/ramdisk/build
+  pushd /tmp/ramdisk/build
+  echo "Running x86 build..."
+  make -j32 TARGET=vm >> ~/upload/build-x86.log 2>&1 || \
+  make -j32 TARGET=vm >> ~/upload/build-x86.log 2>&1 || \
+  make -j32 TARGET=vm >> ~/upload/build-x86.log 2>&1 || \
+  make -j32 TARGET=vm V=s >> ~/upload/build-x86.log 2>&1 || \
+  true
+  aws s3 sync ~/upload/. s3://tessel-builds/firmware/
+
+  set -e
+  cp /tmp/ramdisk/build/openwrt/bin/x86/*.vdi ~/upload
+  tar -czf ~/upload/toolchain-x86.tar.gz -C /tmp/ramdisk/build/openwrt/staging_dir $(find /tmp/ramdisk/build/openwrt/staging_dir -iname '*-i386_*' -exec basename {} \;)
+  popd
+
+  aws s3 sync ~/upload/. s3://tessel-builds/firmware/
+  ' &
+  PID2=$!
+  
+  while kill -0 $PID1 || kill -0 $PID2; do
+    sleep 10
+    echo "."
+  done
+
+# after_script:
+# - yes | gcloud compute instances delete travis-v2 --zone us-central1-b || true
+# - yes | gcloud compute instances delete travis-vm --zone us-central1-b || true
