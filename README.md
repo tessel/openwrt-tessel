@@ -1,3 +1,6 @@
+# Notice [Unmaintained Project]
+This project is currently unmaintained. It is an old version of OpenWRT (15.05-rc2) for which packages are not available and a multitude of security vulnerabilities have been identified and reported. Please use with care.
+
 # OpenWrt
 
 [![Code of Conduct](https://img.shields.io/badge/%E2%9D%A4-code%20of%20conduct-blue.svg?style=flat)](https://github.com/tessel/project/blob/master/CONDUCT.md)
